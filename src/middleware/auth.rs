@@ -2,8 +2,7 @@ use std::env;
 use std::result::Result;
 use jsonwebtoken::{Header, Algorithm, EncodingKey, Validation, DecodingKey};
 use rocket::request::{FromRequest, Outcome};
-use rocket::outcome::IntoOutcome;
-use rocket::http::{ContentType, Status};
+use rocket::http::ContentType;
 use rocket::{Request, response, Response};
 
 use crate::utils::errors::Error;

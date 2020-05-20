@@ -6,11 +6,8 @@ extern crate rocket_contrib;
 #[macro_use]
 extern crate serde_derive;
 
-use rocket::Request;
 use rocket_contrib::json::Json;
 use crate::middleware::auth::{Claims, ClaimResult};
-use std::env;
-use crate::utils::errors::Error;
 
 mod middleware;
 mod utils;
