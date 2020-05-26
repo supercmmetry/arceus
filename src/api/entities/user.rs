@@ -1,3 +1,4 @@
+#[derive(Serialize, Deserialize)]
 pub enum AccessLevel {
     Level1,
     Level2,

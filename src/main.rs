@@ -5,34 +5,32 @@ extern crate rocket;
 extern crate rocket_contrib;
 #[macro_use]
 extern crate serde;
+#[macro_use]
+extern crate diesel;
 
-use rocket_contrib::json::Json;
-use crate::middleware::auth::{Claims, ClaimResult};
+use diesel::{PgConnection, Connection};
+use std::env;
+use crate::utils::errors::{Error, ErrorCode};
 
 mod api;
 mod middleware;
 mod utils;
 
 
+fn connect_to_db() -> Result<PgConnection, Error> {
+    let mut db_url: String = String::default();
+    match env::var("POSTGRES_DB_URL") {
+        Ok(url) => db_url = url,
+        Err(e) => return Err(Error::custom(ErrorCode::DatabaseError, e.to_string()))
+    };
 
-#[derive(Deserialize)]
-struct Text {
-    text: String
+    match PgConnection::establish(db_url.as_str()) {
+        Ok(conn) => Ok(conn),
+        Err(e) => Err(Error::custom(ErrorCode::DatabaseError, e.to_string()))
+    }
 }
-
-#[post("/", format = "json", data = "<text>")]
-fn index(text: Json<Text>) -> String {
-    Claims::new("Vishaal Selvaraj".to_string()).jwt().unwrap()
-}
-
-#[post("/auth")]
-fn test_auth(claims: ClaimResult) -> ClaimResult {
-    claims
-}
-
 
 fn main() {
     dotenv::dotenv().ok();
-
-    rocket::ignite().mount("/", routes![index, test_auth]).launch();
+    let res = connect_to_db();
 }

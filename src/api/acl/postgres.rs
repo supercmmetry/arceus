@@ -15,7 +15,7 @@ impl<'a> PostgresRepo<'a> {
     }
 }
 
-impl Repository for PostgresRepo {
+impl<'a> Repository for PostgresRepo<'a> {
     fn add_user(user: &User) -> Result<(), Error> {
         unimplemented!()
     }

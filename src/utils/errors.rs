@@ -9,7 +9,8 @@ pub enum ErrorCode {
     MalformedAuthToken,
     NoAuthToken,
     MultipleAuthToken,
-    AuthTokenCreationFailed
+    AuthTokenCreationFailed,
+    DatabaseError
 }
 
 #[derive(Debug, Serialize, Clone)]
@@ -26,12 +27,20 @@ impl Error {
         }
     }
 
+    pub fn custom(code: ErrorCode, msg: String) -> Error {
+        Error {
+            error: code,
+            message: msg
+        }
+    }
+
     fn map_to_err(code: &ErrorCode) -> String {
         let str = match code {
             ErrorCode::MalformedAuthToken => "malformed auth token",
             ErrorCode::AuthTokenCreationFailed => "auth token creation failed",
             ErrorCode::NoAuthToken => "no auth token was found",
-            ErrorCode::MultipleAuthToken => "multiple auth tokens found"
+            ErrorCode::MultipleAuthToken => "multiple auth tokens found",
+            ErrorCode::DatabaseError => "database error occured"
         };
 
         str.to_string()
@@ -42,7 +51,8 @@ impl Error {
             ErrorCode::MalformedAuthToken => Status::Forbidden,
             ErrorCode::AuthTokenCreationFailed => Status::InternalServerError,
             ErrorCode::NoAuthToken => Status::Forbidden,
-            ErrorCode::MultipleAuthToken => Status::Forbidden
+            ErrorCode::MultipleAuthToken => Status::Forbidden,
+            ErrorCode::DatabaseError => Status::InternalServerError
         }
     }
 }
