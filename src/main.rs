@@ -4,13 +4,15 @@ extern crate rocket;
 #[macro_use]
 extern crate rocket_contrib;
 #[macro_use]
-extern crate serde_derive;
+extern crate serde;
 
 use rocket_contrib::json::Json;
 use crate::middleware::auth::{Claims, ClaimResult};
 
+mod api;
 mod middleware;
 mod utils;
+
 
 
 #[derive(Deserialize)]
